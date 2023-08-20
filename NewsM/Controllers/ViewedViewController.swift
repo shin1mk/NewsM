@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class SettingsViewController: UIViewController {
+class ViewedViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()

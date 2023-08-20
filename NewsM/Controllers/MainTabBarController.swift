@@ -20,26 +20,30 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
     private func generateTabBar() {
         viewControllers = [
             generateVC(
-                viewController: HomeViewController(),
-                title: "Home",
-                image: UIImage(systemName: "house.fill")),
+                viewController: EmailedViewController(),
+                title: "Emailed",
+                image: UIImage(systemName: "message.badge.filled.fill")),
             generateVC(
-                viewController: PersonViewController(),
-                title: "Person",
-                image: UIImage(systemName: "person.fill")),
+                viewController: SharedViewController(),
+                title: "Shared",
+                image: UIImage(systemName: "shareplay")),
             generateVC(
-                viewController: SettingsViewController(),
-                title: "Settings",
-                image: UIImage(systemName: "slider.horizontal.3"))
+                viewController: ViewedViewController(),
+                title: "Viewed",
+                image: UIImage(systemName: "person.2.fill")),
+            generateVC(
+                viewController: FavoritesViewController(),
+                title: "Favorites",
+                image: UIImage(systemName: "heart.fill"))
         ]
     }
-    
+    // Generate View Controller
     private func generateVC(viewController: UIViewController, title: String, image: UIImage?) -> UIViewController {
         viewController.tabBarItem.title = title
         viewController.tabBarItem.image = image
         return viewController
     }
-    
+    // Appearance
     private func setTabBarAppearance() {
         let positionOnX: CGFloat = 10
         let positionOnY: CGFloat = 15
@@ -61,7 +65,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         roundLayer.path = bezierPath.cgPath
         
         tabBar.layer.insertSublayer(roundLayer, at: 0)
-        tabBar.itemWidth = width / 5
+        tabBar.itemWidth = width / 6
         tabBar.itemPositioning = .centered
     }
     // Delegates
