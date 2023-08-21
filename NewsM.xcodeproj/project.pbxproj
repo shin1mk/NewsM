@@ -18,6 +18,7 @@
 		13884F392A929FA20093778B /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13884F382A929FA20093778B /* MainTabBarController.swift */; };
 		1389A1EB2A92B0F600ABE618 /* NewsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1389A1EA2A92B0F600ABE618 /* NewsManager.swift */; };
 		1389A1ED2A92B5AB00ABE618 /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1389A1EC2A92B5AB00ABE618 /* FavoritesViewController.swift */; };
+		13B7D0B92A93AB12004B3EEB /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13B7D0B82A93AB12004B3EEB /* WebViewController.swift */; };
 		13CB0B2D2A92A3770041018C /* EmailedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13CB0B2C2A92A3770041018C /* EmailedViewController.swift */; };
 		13CB0B2F2A92A3860041018C /* SharedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13CB0B2E2A92A3860041018C /* SharedViewController.swift */; };
 		13CB0B312A92A39E0041018C /* ViewedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13CB0B302A92A39E0041018C /* ViewedViewController.swift */; };
@@ -60,6 +61,7 @@
 		13884F382A929FA20093778B /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		1389A1EA2A92B0F600ABE618 /* NewsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsManager.swift; sourceTree = "<group>"; };
 		1389A1EC2A92B5AB00ABE618 /* FavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
+		13B7D0B82A93AB12004B3EEB /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		13CB0B2C2A92A3770041018C /* EmailedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailedViewController.swift; sourceTree = "<group>"; };
 		13CB0B2E2A92A3860041018C /* SharedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedViewController.swift; sourceTree = "<group>"; };
 		13CB0B302A92A39E0041018C /* ViewedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewedViewController.swift; sourceTree = "<group>"; };
@@ -177,6 +179,7 @@
 				13CB0B2E2A92A3860041018C /* SharedViewController.swift */,
 				13CB0B302A92A39E0041018C /* ViewedViewController.swift */,
 				1389A1EC2A92B5AB00ABE618 /* FavoritesViewController.swift */,
+				13B7D0B82A93AB12004B3EEB /* WebViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -460,6 +463,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13CB0B2D2A92A3770041018C /* EmailedViewController.swift in Sources */,
+				13B7D0B92A93AB12004B3EEB /* WebViewController.swift in Sources */,
 				1389A1ED2A92B5AB00ABE618 /* FavoritesViewController.swift in Sources */,
 				13CB0B2F2A92A3860041018C /* SharedViewController.swift in Sources */,
 				13CB0B312A92A39E0041018C /* ViewedViewController.swift in Sources */,
@@ -633,6 +637,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDarkContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -666,6 +671,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDarkContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

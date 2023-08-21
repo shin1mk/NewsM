@@ -15,6 +15,11 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         generateTabBar()
         setupDelegate()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+         super.viewWillAppear(animated)
+         navigationController?.navigationBar.isTranslucent = true
+     }
     //MARK: Create TabBar
     private func generateTabBar() {
         viewControllers = [
@@ -49,7 +54,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
         if let fromView = selectedViewController?.view, let toView = viewController.view {
             if fromView != toView {
-                UIView.transition(from: fromView, to: toView, duration: 0.2, options: [.transitionCrossDissolve], completion: nil)
+                UIView.transition(from: fromView, to: toView, duration: 0.3, options: [.transitionCrossDissolve], completion: nil)
             }
         }
         return true

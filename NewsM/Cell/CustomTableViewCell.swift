@@ -8,28 +8,44 @@
 import SnapKit
 import UIKit
 
-class CustomTableViewCell: UITableViewCell {
+final class CustomTableViewCell: UITableViewCell {
     var articleURL: URL?
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        return label
+    //MARK: didSet
+    var titleText: String? {
+        didSet {
+            titleLabel.text = titleText
+            titleLabel.numberOfLines = 2
+        }
+    }
+    var dateText: String? {
+        didSet {
+            dateLabel.text = dateText
+        }
+    }
+    //MARK: Properties
+    private let titleLabel: UILabel = {
+        let titleLabel = UILabel()
+        titleLabel.font = UIFont.systemFont(ofSize: 18)
+        titleLabel.textColor = .white
+        return titleLabel
     }()
-
-    let dateLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .gray
-        return label
+    private let dateLabel: UILabel = {
+        let dateLabel = UILabel()
+        dateLabel.font = UIFont.systemFont(ofSize: 14)
+        dateLabel.textColor = .gray
+        return dateLabel
     }()
-
+    //MARK: Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.backgroundColor = .black
         setupConstraints()
     }
     
     required init?(coder aDecoder: NSCoder) {
         return nil
     }
-    
+    //MARK: Methods
     private func setupConstraints() {
         addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in

@@ -8,10 +8,9 @@
 import Foundation
 import UIKit
 import SnapKit
-import SafariServices
 
-
-class EmailedViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class EmailedViewController: UIViewController {
+    private var articles: [[String: Any]] = []     // Создайте массив для хранения данных
     //MARK: Properties
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -21,17 +20,15 @@ class EmailedViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: "CustomCell")
         return tableView
     }()
-    var articles: [[String: Any]] = []     // Создайте массив для хранения данных
-    var articleURL: URL?
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBlue
         setupTableViewConstraints()
-        fetchEmailedArticles() // call method api
+        fetchEmailedArticles()
     }
+
     //MARK: Methods
-    func setupTableViewConstraints() {
+    private func setupTableViewConstraints() {
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -40,9 +37,29 @@ class EmailedViewController: UIViewController, UITableViewDelegate, UITableViewD
             make.bottom.equalToSuperview()
         }
     }
+    //MARK: API
+    private func fetchEmailedArticles() {
+        NewsManager.shared.fetchEmailedArticles { [weak self] articles, error in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("Error fetching data from the API: \(error.localizedDescription)")
+                // Обработайте ошибку, если необходимо
+            } else if let articles = articles {
+                self.articles = articles
+                DispatchQueue.main.async {
+                    self.tableView.reloadData() // Обновите таблицу, когда данные будут доступны
+                }
+                print("Parsed articles: \(articles)")
+            }
+        }
+    }
+} // end emailedViewController
+//MARK: TableView
+extension EmailedViewController: UITableViewDelegate, UITableViewDataSource{
     //MARK: heightForRowAt
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 90.0 // высота ячейки
+        return 90.0
     }
     //MARK: numberOfRowsInSection
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -51,18 +68,17 @@ class EmailedViewController: UIViewController, UITableViewDelegate, UITableViewD
     //MARK: cellForRowAt
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomTableViewCell
-
-       
+        cell.backgroundColor = UIColor.black
+        
         let article = articles[indexPath.row]
-        // Title (limited to 50 characters)
+        // Title
         if let title = article["title"] as? String {
             let truncatedTitle = String(title.prefix(50))
-            cell.titleLabel.text = truncatedTitle
-            cell.titleLabel.numberOfLines = 2 // Установите количество строк в 2
+            cell.titleText = truncatedTitle
         }
         // Publication Date
         if let publishedDate = article["published_date"] as? String {
-            cell.dateLabel.text = "\(publishedDate)"
+            cell.dateText = "\(publishedDate)" // Установка значения через вычисляемое свойство
         }
         // URL (можете добавить кнопку или ссылку в соответствии с вашим интерфейсом)
         if let urlStr = article["url"] as? String, let url = URL(string: urlStr) {
@@ -76,55 +92,9 @@ class EmailedViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         if let cell = tableView.cellForRow(at: indexPath) as? CustomTableViewCell,
            let articleURL = cell.articleURL {
-            let safariViewController = SFSafariViewController(url: articleURL)
-            present(safariViewController, animated: true, completion: nil)
+            let webViewController = WebViewController()
+            webViewController.articleURL = articleURL
+            navigationController?.pushViewController(webViewController, animated: true)
         }
     }
-    //MARK: API
-    func fetchEmailedArticles() {
-        let apiKey = "FmT19AaabNgeLfhi0HD0pHW9NWwXcNKl"
-        let emailedURL = URL(string: "https://api.nytimes.com/svc/mostpopular/v2/emailed/30.json?api-key=\(apiKey)")
-        let session = URLSession.shared
-        let emailedTask = session.dataTask(with: emailedURL!) { [weak self] (data, response, error) in
-            guard let self = self else { return }
-            
-            if let error = error {
-                print("Error fetching data from the API: \(error.localizedDescription)")
-                return
-            }
-            
-            if let data = data {
-                do {
-                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                        print("Received JSON data: \(json)")
-                        
-                        // Extract articles from the "results" array
-                        if let results = json["results"] as? [[String: Any]] {
-                            var parsedArticles: [[String: Any]] = []
-                            for result in results {
-                                if let title = result["title"] as? String,
-                                   let abstract = result["abstract"] as? String,
-                                   let url = result["url"] as? String,
-                                   let publishedDate = result["published_date"] as? String {
-                                    let article = ["title": title,
-                                                   "abstract": abstract,
-                                                   "url": url,
-                                                   "published_date": publishedDate]
-                                    parsedArticles.append(article)
-                                }
-                            }
-                            self.articles = parsedArticles
-                            DispatchQueue.main.async {
-                                self.tableView.reloadData() // Обновите таблицу, когда данные будут доступны
-                            }
-                            print("Parsed articles: \(parsedArticles)")
-                        }
-                    }
-                } catch {
-                    print("Error parsing JSON data: \(error.localizedDescription)")
-                }
-            }
-        }
-        emailedTask.resume()
-    }
-} // end emailedViewController
+}
