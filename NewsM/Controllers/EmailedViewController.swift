@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 
 class EmailedViewController: UIViewController {
-    private var articles: [[String: Any]] = []     // Создайте массив для хранения данных
+    private var articles: [[String: Any]] = []
     //MARK: Properties
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -26,15 +26,11 @@ class EmailedViewController: UIViewController {
         setupTableViewConstraints()
         fetchEmailedArticles()
     }
-
     //MARK: Methods
     private func setupTableViewConstraints() {
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
-            make.bottom.equalToSuperview()
+            make.edges.equalToSuperview()
         }
     }
     //MARK: API
@@ -73,16 +69,15 @@ extension EmailedViewController: UITableViewDelegate, UITableViewDataSource{
         let article = articles[indexPath.row]
         // Title
         if let title = article["title"] as? String {
-            let truncatedTitle = String(title.prefix(50))
+            let truncatedTitle = String(title.prefix(60))
             cell.titleText = truncatedTitle
         }
         // Publication Date
         if let publishedDate = article["published_date"] as? String {
-            cell.dateText = "\(publishedDate)" // Установка значения через вычисляемое свойство
+            cell.dateText = "\(publishedDate)"
         }
-        // URL (можете добавить кнопку или ссылку в соответствии с вашим интерфейсом)
         if let urlStr = article["url"] as? String, let url = URL(string: urlStr) {
-            cell.articleURL = url // передаем URL ячейке
+            cell.articleURL = url
         }
         return cell
     }

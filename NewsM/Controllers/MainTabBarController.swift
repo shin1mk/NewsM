@@ -17,9 +17,9 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-         super.viewWillAppear(animated)
-         navigationController?.navigationBar.isTranslucent = true
-     }
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isTranslucent = true
+    }
     //MARK: Create TabBar
     private func generateTabBar() {
         viewControllers = [
@@ -59,4 +59,4 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         }
         return true
     }
-} // end class MainTabBar
+}

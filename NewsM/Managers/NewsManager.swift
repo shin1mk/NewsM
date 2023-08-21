@@ -10,7 +10,7 @@ import Foundation
 
 class NewsManager {
     static let shared = NewsManager() // Создайте синглтон NewsManager для общего доступа к функции
-    
+    //MARK: fetchEmailedArticles
     func fetchEmailedArticles(completion: @escaping ([[String: Any]]?, Error?) -> Void) {
         let apiKey = "FmT19AaabNgeLfhi0HD0pHW9NWwXcNKl"
         let emailedURL = URL(string: "https://api.nytimes.com/svc/mostpopular/v2/emailed/30.json?api-key=\(apiKey)")

@@ -21,6 +21,7 @@ class WebViewController: UIViewController {
         setupNavigationBar()
         setupWebViewConstraints()
         loadArticleURL()
+        starButton()
     }
     // Setup Navigation Bar
     private func setupNavigationBar() {
@@ -39,5 +40,15 @@ class WebViewController: UIViewController {
             let request = URLRequest(url: url)
             webView.load(request)
         }
+    }
+    // create star button
+    private func starButton() {
+        let starButton = UIBarButtonItem(image: UIImage(systemName: "star.fill"), style: .plain, target: self, action: #selector(starButtonAction))
+        navigationItem.rightBarButtonItems = [starButton]
+    }
+    // star button action
+    @objc private func starButtonAction() {
+        print("starButtonAction")
+        // Добавьте здесь код для обработки нажатия на звездочку
     }
 }
