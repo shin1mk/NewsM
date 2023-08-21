@@ -13,7 +13,6 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         generateTabBar()
-        setTabBarAppearance()
         setupDelegate()
     }
     //MARK: Create TabBar
@@ -43,32 +42,6 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         viewController.tabBarItem.image = image
         return viewController
     }
-    // Appearance
-    private func setTabBarAppearance() {
-        let positionOnX: CGFloat = 10
-        let positionOnY: CGFloat = 15
-        let width = tabBar.bounds.width - positionOnX * 2
-        let height = tabBar.bounds.height + positionOnY * 2
-        
-        let roundLayer = CAShapeLayer()
-        
-        let bezierPath = UIBezierPath(
-            roundedRect: CGRect(
-                x: positionOnX,
-                y: tabBar.bounds.minY - positionOnY,
-                width: width,
-                height: height
-            ),
-            cornerRadius: 25
-        )
-        
-        roundLayer.path = bezierPath.cgPath
-        
-        tabBar.layer.insertSublayer(roundLayer, at: 0)
-        tabBar.itemWidth = width / 6
-        tabBar.itemPositioning = .centered
-    }
-    // Delegates
     private func setupDelegate() {
         delegate = self
     }

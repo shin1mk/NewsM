@@ -8,6 +8,8 @@
 import Foundation
 import UIKit
 import SnapKit
+import SafariServices
+
 
 class EmailedViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     //MARK: Properties
@@ -16,10 +18,11 @@ class EmailedViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.delegate = self
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "YourCellIdentifier")
+        tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: "CustomCell")
         return tableView
     }()
     var articles: [[String: Any]] = []     // Создайте массив для хранения данных
+    var articleURL: URL?
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,26 +40,45 @@ class EmailedViewController: UIViewController, UITableViewDelegate, UITableViewD
             make.bottom.equalToSuperview()
         }
     }
+    //MARK: heightForRowAt
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 90.0 // высота ячейки
+    }
     //MARK: numberOfRowsInSection
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return articles.count
     }
     //MARK: cellForRowAt
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "YourCellIdentifier", for: indexPath)
-        // Наполните ячейку данными из массива articles
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomTableViewCell
+
+       
         let article = articles[indexPath.row]
-        
+        // Title (limited to 50 characters)
         if let title = article["title"] as? String {
-            cell.textLabel?.text = title
-            cell.textLabel?.numberOfLines = 0 // Установите numberOfLines в 0 для текстовой метки
+            let truncatedTitle = String(title.prefix(50))
+            cell.titleLabel.text = truncatedTitle
+            cell.titleLabel.numberOfLines = 2 // Установите количество строк в 2
         }
-        
+        // Publication Date
         if let publishedDate = article["published_date"] as? String {
-            cell.detailTextLabel?.text = "Дата публикации: \(publishedDate)"
+            cell.dateLabel.text = "\(publishedDate)"
         }
-        // Другие поля, которые вас интересуют
+        // URL (можете добавить кнопку или ссылку в соответствии с вашим интерфейсом)
+        if let urlStr = article["url"] as? String, let url = URL(string: urlStr) {
+            cell.articleURL = url // передаем URL ячейке
+        }
         return cell
+    }
+    //MARK: didSelectRowAt
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        if let cell = tableView.cellForRow(at: indexPath) as? CustomTableViewCell,
+           let articleURL = cell.articleURL {
+            let safariViewController = SFSafariViewController(url: articleURL)
+            present(safariViewController, animated: true, completion: nil)
+        }
     }
     //MARK: API
     func fetchEmailedArticles() {
@@ -65,24 +87,41 @@ class EmailedViewController: UIViewController, UITableViewDelegate, UITableViewD
         let session = URLSession.shared
         let emailedTask = session.dataTask(with: emailedURL!) { [weak self] (data, response, error) in
             guard let self = self else { return }
+            
             if let error = error {
-                print("Ошибка при получении данных о самых электронных статьях: \(error.localizedDescription)")
+                print("Error fetching data from the API: \(error.localizedDescription)")
                 return
             }
-            // разбор JSON
+            
             if let data = data {
                 do {
                     if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                        // Вместо вывода данных в консоль, добавьте их в массив
+                        print("Received JSON data: \(json)")
+                        
+                        // Extract articles from the "results" array
                         if let results = json["results"] as? [[String: Any]] {
-                            self.articles = results
+                            var parsedArticles: [[String: Any]] = []
+                            for result in results {
+                                if let title = result["title"] as? String,
+                                   let abstract = result["abstract"] as? String,
+                                   let url = result["url"] as? String,
+                                   let publishedDate = result["published_date"] as? String {
+                                    let article = ["title": title,
+                                                   "abstract": abstract,
+                                                   "url": url,
+                                                   "published_date": publishedDate]
+                                    parsedArticles.append(article)
+                                }
+                            }
+                            self.articles = parsedArticles
                             DispatchQueue.main.async {
                                 self.tableView.reloadData() // Обновите таблицу, когда данные будут доступны
                             }
+                            print("Parsed articles: \(parsedArticles)")
                         }
                     }
                 } catch {
-                    print("Ошибка при разборе данных JSON: \(error.localizedDescription)")
+                    print("Error parsing JSON data: \(error.localizedDescription)")
                 }
             }
         }
