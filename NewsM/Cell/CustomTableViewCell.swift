@@ -7,14 +7,13 @@
 
 import SnapKit
 import UIKit
+import SDWebImage
 
 final class CustomTableViewCell: UITableViewCell {
     //MARK: didSet
     var newsArticle: NewsArticle? {
         didSet {
-            titleLabel.text = newsArticle?.title
-            titleLabel.numberOfLines = 2
-            dateLabel.text = newsArticle?.publishedDate
+            configure(with: newsArticle)
         }
     }
     //MARK: Properties
@@ -30,6 +29,12 @@ final class CustomTableViewCell: UITableViewCell {
         dateLabel.textColor = .gray
         return dateLabel
     }()
+    private let customImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        return imageView
+    }()
     //MARK: Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -42,15 +47,37 @@ final class CustomTableViewCell: UITableViewCell {
     }
     //MARK: Methods
     private func setupConstraints() {
+        // custom Image
+        addSubview(customImageView)
+        customImageView.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.trailing.equalToSuperview().inset(15)
+            make.width.equalTo(80)
+            make.height.equalTo(60)
+        }
+        // title Lable
         addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(8)
-            make.leading.trailing.equalToSuperview().inset(15)
+            make.leading.equalToSuperview().offset(15)
+            make.trailing.equalTo(customImageView.snp.leading).offset(-8)
         }
+        // date Label
         addSubview(dateLabel)
         dateLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(8)
             make.leading.trailing.equalToSuperview().inset(15)
+            make.bottom.equalToSuperview().inset(8)
+        }
+    }
+    //MARK: Configure
+    private func configure(with newsArticle: NewsArticle?) {
+        titleLabel.text = newsArticle?.title
+        titleLabel.numberOfLines = 2
+        dateLabel.text = newsArticle?.publishedDate
+        
+        if let thumbnailURL = newsArticle?.mediaMetadata.first?.url,
+           let url = URL(string: thumbnailURL) {
+            customImageView.sd_setImage(with: url, completed: nil)
         }
     }
 }

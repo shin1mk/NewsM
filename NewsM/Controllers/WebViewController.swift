@@ -43,58 +43,54 @@ class WebViewController: UIViewController {
             webView.load(request)
         }
     }
-    //    // create star button
-    //    private func starButton() {
-    //        // Создаем кнопку с изображением звездочки или звездочки с заливкой в зависимости от состояния
-    //        let starImage = isStarred ? UIImage(systemName: "star.fill") : UIImage(systemName: "star")
-    //        let starButton = UIBarButtonItem(image: starImage, style: .plain, target: self, action: #selector(starButtonAction))
-    //        navigationItem.rightBarButtonItems = [starButton]
-    //    }
-    //
-    //    // star button action
-    //    @objc private func starButtonAction() {
-    //        isStarred.toggle() // Инвертируем состояние кнопки при нажатии
-    //        starButton() // Обновляем кнопку с новым изображением
-    //        print("starButtonAction")
-    //        // Добавьте здесь код для обработки нажатия на звездочку
-    //    }
-    //MARK: StarButton
+    //MARK: Star Button
     private func starButton() {
         let starButton = UIBarButtonItem(image: UIImage(systemName: isStarred ? "star.fill" : "star"), style: .plain, target: self, action: #selector(starButtonAction))
         navigationItem.rightBarButtonItems = [starButton]
     }
     // star button action
     @objc private func starButtonAction() {
-        isStarred.toggle() // Инвертируем состояние кнопки при нажатии
-        
-        switch isStarred {
-        case true:
-            animateStarFalling()
-        case false:
-            break
-        }
-        starButton() // Обновляем кнопку с новым изображением
+        isStarred.toggle()
+        starButton()
         print("starButtonAction")
-    }
-    // star animation
-    private func animateStarFalling() {
-        // Создаем анимацию падения
-        let fallingAnimation = CABasicAnimation(keyPath: "position.y")
-        fallingAnimation.duration = 1.0 // Длительность анимации
-        fallingAnimation.fromValue = view.frame.minY // Начальная позиция анимации (верх экрана)
-        fallingAnimation.toValue = view.frame.maxY // Конечная позиция анимации (низ экрана)
-        
-        let starImageView = UIImageView(image: UIImage(systemName: "star.fill"))
-        starImageView.frame = CGRect(x: view.center.x, y: view.frame.minY, width: 30, height: 30)
-        view.addSubview(starImageView)
-        
-        // Применяем анимацию к звезде
-        starImageView.layer.add(fallingAnimation, forKey: "fallingAnimation")
-        
-        // Удаляем звезду после завершения анимации
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            starImageView.removeFromSuperview()
-        }
     }
 }
 
+
+
+/*
+ // star animation
+ @objc private func starButtonAction() {
+     isStarred.toggle() // Инвертируем состояние кнопки при нажатии
+     
+     switch isStarred {
+     case true:
+     animateStarFalling()
+     case false:
+     break
+     }
+     starButton() // Обновляем кнопку с новым изображением
+     print("starButtonAction")
+ }
+ 
+ private func animateStarFalling() {
+     // Определите начальную позицию с учетом отступа от правого края
+     let startX = view.frame.maxX - 35
+     // Создаем анимацию падения
+     let fallingAnimation = CABasicAnimation(keyPath: "position")
+     fallingAnimation.duration = 1.0
+     fallingAnimation.fromValue = NSValue(cgPoint: CGPoint(x: startX, y: view.frame.minY))
+     fallingAnimation.toValue = NSValue(cgPoint: CGPoint(x: startX, y: view.frame.maxY))
+     
+     let starImageView = UIImageView(image: UIImage(systemName: "star.fill"))
+     starImageView.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+     starImageView.center = CGPoint(x: startX, y: view.frame.minY)
+     view.addSubview(starImageView)
+     // Применяем анимацию к звезде
+     starImageView.layer.add(fallingAnimation, forKey: "fallingAnimation")
+     // Удаляем звезду после завершения анимации
+         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+         starImageView.removeFromSuperview()
+     }
+ }
+*/

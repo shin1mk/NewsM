@@ -66,7 +66,7 @@ extension EmailedViewController: UITableViewDelegate, UITableViewDataSource{
         let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomTableViewCell
         let article = articles[indexPath.row]
         cell.backgroundColor = UIColor.black
-        // Теперь используйте свойства структуры NewsArticle
+        // юзаем свойства структуры
         cell.newsArticle = article
         return cell
     }
@@ -77,7 +77,7 @@ extension EmailedViewController: UITableViewDelegate, UITableViewDataSource{
         if let cell = tableView.cellForRow(at: indexPath) as? CustomTableViewCell,
            let newsArticle = cell.newsArticle {
             let webViewController = WebViewController()
-            webViewController.newsArticle = newsArticle // Передайте экземпляр NewsArticle
+            webViewController.newsArticle = newsArticle // Передали экземпляр NewsArticle
             navigationController?.pushViewController(webViewController, animated: true)
         }
     }

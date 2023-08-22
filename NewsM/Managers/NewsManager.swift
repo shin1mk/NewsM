@@ -13,6 +13,14 @@ struct NewsArticle {
     let abstract: String
     let url: String
     let publishedDate: String
+    var mediaMetadata: [MediaMetadata]
+}
+
+struct MediaMetadata {
+    let url: String
+    let format: String
+    let height: Int
+    let width: Int
 }
 
 final class NewsManager {
@@ -39,11 +47,27 @@ final class NewsManager {
                                 if let title = result["title"] as? String,
                                    let abstract = result["abstract"] as? String,
                                    let url = result["url"] as? String,
-                                   let publishedDate = result["published_date"] as? String {
+                                   let publishedDate = result["published_date"] as? String,
+                                   let mediaArray = result["media"] as? [[String: Any]] {
+                                    var mediaMetadata: [MediaMetadata] = []
+                                    for media in mediaArray {
+                                        if let metadataArray = media["media-metadata"] as? [[String: Any]] {
+                                            for metadata in metadataArray {
+                                                if let mediaURL = metadata["url"] as? String,
+                                                   let mediaFormat = metadata["format"] as? String,
+                                                   let mediaHeight = metadata["height"] as? Int,
+                                                   let mediaWidth = metadata["width"] as? Int {
+                                                    let metadata = MediaMetadata(url: mediaURL, format: mediaFormat, height: mediaHeight, width: mediaWidth)
+                                                    mediaMetadata.append(metadata)
+                                                }
+                                            }
+                                        }
+                                    }
                                     let article = NewsArticle(title: title,
                                                               abstract: abstract,
                                                               url: url,
-                                                              publishedDate: publishedDate)
+                                                              publishedDate: publishedDate,
+                                                              mediaMetadata: mediaMetadata)
                                     parsedArticles.append(article)
                                 }
                             }
