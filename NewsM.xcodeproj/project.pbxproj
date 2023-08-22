@@ -105,6 +105,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		130B0E912A9548EB00E4A599 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				13884F0B2A929F240093778B /* NewsM.xcdatamodeld */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		133F88AC2A9360B3005267BF /* Cell */ = {
 			isa = PBXGroup;
 			children = (
@@ -138,6 +146,7 @@
 		13884F012A929F240093778B /* NewsM */ = {
 			isa = PBXGroup;
 			children = (
+				130B0E912A9548EB00E4A599 /* CoreData */,
 				13B12D2D2A94F1E2008413F5 /* Models */,
 				133F88AC2A9360B3005267BF /* Cell */,
 				1389A1E92A92B0D400ABE618 /* Managers */,
@@ -192,7 +201,6 @@
 			children = (
 				13884F0E2A929F250093778B /* Assets.xcassets */,
 				13884F132A929F250093778B /* Info.plist */,
-				13884F0B2A929F240093778B /* NewsM.xcdatamodeld */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -716,9 +724,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = code.NewsMTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NewsM.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NewsM";
 			};
 			name = Debug;
@@ -736,9 +747,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = code.NewsMTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NewsM.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NewsM";
 			};
 			name = Release;
@@ -754,9 +768,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = code.NewsMUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				TEST_TARGET_NAME = NewsM;
 			};
 			name = Debug;
@@ -772,9 +789,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = code.NewsMUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				TEST_TARGET_NAME = NewsM;
 			};
 			name = Release;
