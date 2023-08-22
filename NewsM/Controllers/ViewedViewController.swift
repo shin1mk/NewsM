@@ -11,6 +11,7 @@ import SnapKit
 
 final class ViewedViewController: UIViewController {
     private var articles: [NewsArticle] = []
+    private let refreshControl = UIRefreshControl()
     //MARK: Properties
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -18,6 +19,7 @@ final class ViewedViewController: UIViewController {
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: "CustomCell")
+        tableView.refreshControl = refreshControl
         return tableView
     }()
     //MARK: Lifecycle
@@ -25,6 +27,7 @@ final class ViewedViewController: UIViewController {
         super.viewDidLoad()
         setupTableViewConstraints()
         fetchViewedArticles()
+        setupTarget()
     }
     //MARK: Methods
     private func setupTableViewConstraints() {
@@ -45,8 +48,19 @@ final class ViewedViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
-                print("Parsed articles: \(articles)")
             }
+        }
+    }
+    
+    private func setupTarget() {
+        refreshControl.addTarget(self, action: #selector(refreshData(_:)), for: .valueChanged)
+    }
+    
+    @objc private func refreshData(_ sender: Any) {
+        fetchViewedArticles()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.refreshControl.endRefreshing()
         }
     }
 }
@@ -81,4 +95,3 @@ extension ViewedViewController: UITableViewDelegate, UITableViewDataSource{
         }
     }
 }
-

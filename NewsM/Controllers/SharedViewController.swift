@@ -9,8 +9,13 @@ import Foundation
 import UIKit
 import SnapKit
 
+import Foundation
+import UIKit
+import SnapKit
+
 final class SharedViewController: UIViewController {
     private var articles: [NewsArticle] = []
+    private let refreshControl = UIRefreshControl()
     //MARK: Properties
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -18,6 +23,7 @@ final class SharedViewController: UIViewController {
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: "CustomCell")
+        tableView.refreshControl = refreshControl
         return tableView
     }()
     //MARK: Lifecycle
@@ -25,6 +31,7 @@ final class SharedViewController: UIViewController {
         super.viewDidLoad()
         setupTableViewConstraints()
         fetchSharedArticles()
+        setupTarget()
     }
     //MARK: Methods
     private func setupTableViewConstraints() {
@@ -45,8 +52,19 @@ final class SharedViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
-                print("Parsed articles: \(articles)")
             }
+        }
+    }
+    
+    private func setupTarget() {
+        refreshControl.addTarget(self, action: #selector(refreshData(_:)), for: .valueChanged)
+    }
+    
+    @objc private func refreshData(_ sender: Any) {
+        fetchSharedArticles()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.refreshControl.endRefreshing()
         }
     }
 }
