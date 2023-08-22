@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SnapKit
 
-class EmailedViewController: UIViewController {
+final class EmailedViewController: UIViewController {
     private var articles: [[String: Any]] = []
     //MARK: Properties
     private lazy var tableView: UITableView = {
@@ -50,7 +50,7 @@ class EmailedViewController: UIViewController {
             }
         }
     }
-} // end emailedViewController
+} // end
 //MARK: TableView
 extension EmailedViewController: UITableViewDelegate, UITableViewDataSource{
     //MARK: heightForRowAt

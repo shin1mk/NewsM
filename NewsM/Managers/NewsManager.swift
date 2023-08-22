@@ -8,7 +8,7 @@
 
 import Foundation
 
-class NewsManager {
+final class NewsManager {
     static let shared = NewsManager() // Создайте синглтон NewsManager для общего доступа к функции
     //MARK: fetchEmailedArticles
     func fetchEmailedArticles(completion: @escaping ([[String: Any]]?, Error?) -> Void) {
