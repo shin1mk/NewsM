@@ -9,17 +9,12 @@ import SnapKit
 import UIKit
 
 final class CustomTableViewCell: UITableViewCell {
-    var articleURL: URL?
     //MARK: didSet
-    var titleText: String? {
+    var newsArticle: NewsArticle? {
         didSet {
-            titleLabel.text = titleText
+            titleLabel.text = newsArticle?.title
             titleLabel.numberOfLines = 2
-        }
-    }
-    var dateText: String? {
-        didSet {
-            dateLabel.text = dateText
+            dateLabel.text = newsArticle?.publishedDate
         }
     }
     //MARK: Properties

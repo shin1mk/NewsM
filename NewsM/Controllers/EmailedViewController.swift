@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 
 final class EmailedViewController: UIViewController {
-    private var articles: [[String: Any]] = []
+    private var articles: [NewsArticle] = []
     //MARK: Properties
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -44,7 +44,7 @@ final class EmailedViewController: UIViewController {
             } else if let articles = articles {
                 self.articles = articles
                 DispatchQueue.main.async {
-                    self.tableView.reloadData() // Обновите таблицу, когда данные будут доступны
+                    self.tableView.reloadData()
                 }
                 print("Parsed articles: \(articles)")
             }
@@ -64,21 +64,10 @@ extension EmailedViewController: UITableViewDelegate, UITableViewDataSource{
     //MARK: cellForRowAt
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomTableViewCell
-        cell.backgroundColor = UIColor.black
-        
         let article = articles[indexPath.row]
-        // Title
-        if let title = article["title"] as? String {
-            let truncatedTitle = String(title.prefix(60))
-            cell.titleText = truncatedTitle
-        }
-        // Publication Date
-        if let publishedDate = article["published_date"] as? String {
-            cell.dateText = "\(publishedDate)"
-        }
-        if let urlStr = article["url"] as? String, let url = URL(string: urlStr) {
-            cell.articleURL = url
-        }
+        cell.backgroundColor = UIColor.black
+        // Теперь используйте свойства структуры NewsArticle
+        cell.newsArticle = article
         return cell
     }
     //MARK: didSelectRowAt
@@ -86,9 +75,9 @@ extension EmailedViewController: UITableViewDelegate, UITableViewDataSource{
         tableView.deselectRow(at: indexPath, animated: true)
         
         if let cell = tableView.cellForRow(at: indexPath) as? CustomTableViewCell,
-           let articleURL = cell.articleURL {
+           let newsArticle = cell.newsArticle {
             let webViewController = WebViewController()
-            webViewController.articleURL = articleURL
+            webViewController.newsArticle = newsArticle // Передайте экземпляр NewsArticle
             navigationController?.pushViewController(webViewController, animated: true)
         }
     }

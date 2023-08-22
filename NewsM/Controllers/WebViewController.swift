@@ -11,7 +11,7 @@ import SnapKit
 
 class WebViewController: UIViewController {
     //MARK: Properties
-    var articleURL: URL?
+    var newsArticle: NewsArticle?
     private var isStarred = false
     private lazy var webView: WKWebView = {
         let webView = WKWebView()
@@ -38,7 +38,7 @@ class WebViewController: UIViewController {
     }
     // Load Article URL
     private func loadArticleURL() {
-        if let url = articleURL {
+        if let urlStr = newsArticle?.url, let url = URL(string: urlStr) {
             let request = URLRequest(url: url)
             webView.load(request)
         }
