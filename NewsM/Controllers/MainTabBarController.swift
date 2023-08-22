@@ -47,6 +47,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         viewController.tabBarItem.image = image
         return viewController
     }
+    // Delegate
     private func setupDelegate() {
         delegate = self
     }

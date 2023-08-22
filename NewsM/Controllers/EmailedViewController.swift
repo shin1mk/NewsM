@@ -51,11 +51,11 @@ final class EmailedViewController: UIViewController {
             }
         }
     }
-    
+    // Target
     private func setupTarget() {
         refreshControl.addTarget(self, action: #selector(refreshData(_:)), for: .valueChanged)
     }
-    
+    // Refresh Data
     @objc private func refreshData(_ sender: Any) {
         fetchEmailedArticles()
         
