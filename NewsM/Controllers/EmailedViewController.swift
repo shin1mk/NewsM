@@ -40,7 +40,6 @@ final class EmailedViewController: UIViewController {
             
             if let error = error {
                 print("Error fetching data from the API: \(error.localizedDescription)")
-                // Обработайте ошибку, если необходимо
             } else if let articles = articles {
                 self.articles = articles
                 DispatchQueue.main.async {
@@ -50,8 +49,8 @@ final class EmailedViewController: UIViewController {
             }
         }
     }
-} // end
-//MARK: TableView
+}
+//MARK: extension TableView
 extension EmailedViewController: UITableViewDelegate, UITableViewDataSource{
     //MARK: heightForRowAt
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
