@@ -7,8 +7,11 @@
 
 import UIKit
 import SnapKit
+import CoreData
 
 final class FavoritesViewController: UIViewController {
+    private var favoriteArticles: [FavoriteArticle] = []
+
     //MARK: Properties
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -22,6 +25,7 @@ final class FavoritesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
+        loadFavoriteArticles()
     }
     //MARK: Methods
     private func setupTableView() {
@@ -29,6 +33,10 @@ final class FavoritesViewController: UIViewController {
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+    }
+    private func loadFavoriteArticles() {
+        favoriteArticles = CoreDataManager.shared.fetchFavoriteArticles()
+        tableView.reloadData()
     }
 } // end
 //MARK: extension TableView
@@ -39,23 +47,25 @@ extension FavoritesViewController: UITableViewDelegate, UITableViewDataSource{
     }
     //MARK: numberOfRowsInSection
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
-    }
-    //MARK: cellForRowAt:
+           return favoriteArticles.count
+       }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomTableViewCell
-            
-            // Создаем тестовую статью с ссылкой на "google.com" для проверки
-            let testArticle = NewsArticle(title: "Google",
-                                          abstract: "Google's homepage",
-                                          url: "https://www.google.com",
-                                          publishedDate: "August 22, 2023",
-                                          mediaMetadata: [])
-            
-            cell.newsArticle = testArticle
-            
-            return cell
-        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomTableViewCell
+        
+        let favoriteArticle = favoriteArticles[indexPath.row]
+
+        cell.newsArticle = NewsArticle(
+            title: favoriteArticle.title ?? "",
+            abstract: favoriteArticle.abstract ?? "",
+            url: favoriteArticle.url ?? "",
+            publishedDate: favoriteArticle.publishedDate ?? "",
+            mediaMetadata: []
+        )
+
+        return cell
+    }
+
     //MARK: didSelectRowAt:
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

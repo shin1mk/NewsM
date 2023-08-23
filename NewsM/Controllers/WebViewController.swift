@@ -8,6 +8,7 @@
 import UIKit
 import WebKit
 import SnapKit
+import CoreData
 
 class WebViewController: UIViewController {
     //MARK: Properties
@@ -48,10 +49,32 @@ class WebViewController: UIViewController {
         let starButton = UIBarButtonItem(image: UIImage(systemName: isStarred ? "star.fill" : "star"), style: .plain, target: self, action: #selector(starButtonAction))
         navigationItem.rightBarButtonItems = [starButton]
     }
+
     // star button action
+//    @objc private func starButtonAction() {
+//        isStarred.toggle()
+//        starButton()
+//        print("starButtonAction")
+//    }
     @objc private func starButtonAction() {
         isStarred.toggle()
         starButton()
-        print("starButtonAction")
+        
+        if isStarred {
+            // Получаем контекст CoreData
+            let context = CoreDataManager.shared.persistentContainer.viewContext
+            
+            // Создаем объект FavoriteArticle и заполняем его свойства
+            let favoriteArticle = FavoriteArticle(context: context)
+            favoriteArticle.title = newsArticle?.title
+            favoriteArticle.abstract = newsArticle?.abstract
+            favoriteArticle.url = newsArticle?.url
+            favoriteArticle.publishedDate = newsArticle?.publishedDate
+
+            CoreDataManager.shared.saveContext()
+            
+            print("Article added to favorites")
+        }
     }
+
 }
