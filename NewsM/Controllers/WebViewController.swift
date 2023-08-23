@@ -12,6 +12,7 @@ import CoreData
 
 class WebViewController: UIViewController {
     //MARK: Properties
+
     var newsArticle: NewsArticle?
     private var isStarred = false
     private lazy var webView: WKWebView = {
@@ -21,15 +22,11 @@ class WebViewController: UIViewController {
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupNavigationBar()
         setupWebViewConstraints()
         loadArticleURL()
         starButton()
     }
     //MARK: Methods
-    private func setupNavigationBar() {
-        navigationController?.navigationBar.isTranslucent = true
-    }
     // Setup WebView Constraints
     private func setupWebViewConstraints() {
         view.addSubview(webView)
@@ -49,13 +46,7 @@ class WebViewController: UIViewController {
         let starButton = UIBarButtonItem(image: UIImage(systemName: isStarred ? "star.fill" : "star"), style: .plain, target: self, action: #selector(starButtonAction))
         navigationItem.rightBarButtonItems = [starButton]
     }
-
-    // star button action
-//    @objc private func starButtonAction() {
-//        isStarred.toggle()
-//        starButton()
-//        print("starButtonAction")
-//    }
+    // starButtonAction
     @objc private func starButtonAction() {
         isStarred.toggle()
         starButton()
@@ -63,7 +54,6 @@ class WebViewController: UIViewController {
         if isStarred {
             // Получаем контекст CoreData
             let context = CoreDataManager.shared.persistentContainer.viewContext
-            
             // Создаем объект FavoriteArticle и заполняем его свойства
             let favoriteArticle = FavoriteArticle(context: context)
             favoriteArticle.title = newsArticle?.title
@@ -76,5 +66,4 @@ class WebViewController: UIViewController {
             print("Article added to favorites")
         }
     }
-
 }

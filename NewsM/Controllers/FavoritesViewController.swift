@@ -11,6 +11,7 @@ import CoreData
 
 final class FavoritesViewController: UIViewController {
     private var favoriteArticles: [FavoriteArticle] = []
+    var webViewController: WebViewController?
 
     //MARK: Properties
     private lazy var tableView: UITableView = {
@@ -34,10 +35,14 @@ final class FavoritesViewController: UIViewController {
             make.edges.equalToSuperview()
         }
     }
-    private func loadFavoriteArticles() {
-        favoriteArticles = CoreDataManager.shared.fetchFavoriteArticles()
-        tableView.reloadData()
+    // load Favorites
+    func loadFavoriteArticles() {
+        DispatchQueue.main.async { [self] in
+            favoriteArticles = CoreDataManager.shared.fetchFavoriteArticles()
+            tableView.reloadData()
+        }
     }
+
 } // end
 //MARK: extension TableView
 extension FavoritesViewController: UITableViewDelegate, UITableViewDataSource{
@@ -62,7 +67,7 @@ extension FavoritesViewController: UITableViewDelegate, UITableViewDataSource{
             publishedDate: favoriteArticle.publishedDate ?? "",
             mediaMetadata: []
         )
-
+        
         return cell
     }
 
