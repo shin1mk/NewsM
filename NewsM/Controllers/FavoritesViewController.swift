@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import CoreData
 
-protocol FavoritesViewControllerDelegate: class {
+protocol FavoritesViewControllerDelegate: AnyObject {
     func didAddArticleToFavorites()
 }
 
@@ -33,6 +33,11 @@ final class FavoritesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
+        loadFavoriteArticles()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         loadFavoriteArticles()
     }
     //MARK: Methods
