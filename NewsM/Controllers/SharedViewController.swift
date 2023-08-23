@@ -82,8 +82,7 @@ extension SharedViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomTableViewCell
         let article = articles[indexPath.row]
-        cell.backgroundColor = UIColor.black
-        // юзаем свойства структуры
+
         cell.newsArticle = article
         return cell
     }

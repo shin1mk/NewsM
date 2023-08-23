@@ -20,13 +20,11 @@ final class CustomTableViewCell: UITableViewCell {
     private let titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.font = UIFont.systemFont(ofSize: 18)
-        titleLabel.textColor = .white
         return titleLabel
     }()
     private let dateLabel: UILabel = {
         let dateLabel = UILabel()
-        dateLabel.font = UIFont.systemFont(ofSize: 14)
-        dateLabel.textColor = .gray
+        dateLabel.font = UIFont.systemFont(ofSize: 12)
         return dateLabel
     }()
     private let customImageView: UIImageView = {
@@ -38,7 +36,6 @@ final class CustomTableViewCell: UITableViewCell {
     //MARK: Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.backgroundColor = .black
         setupConstraints()
     }
     
