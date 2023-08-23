@@ -14,6 +14,8 @@ class WebViewController: UIViewController {
     //MARK: Properties
 
     var newsArticle: NewsArticle?
+    var didAddArticleToFavorites: (() -> Void)?
+
     private var isStarred = false
     private lazy var webView: WKWebView = {
         let webView = WKWebView()
@@ -64,6 +66,16 @@ class WebViewController: UIViewController {
             CoreDataManager.shared.saveContext()
             
             print("Article added to favorites")
+            
+            DispatchQueue.main.async {
+                // Вызываем блок обратного вызова, если он установлен
+                self.didAddArticleToFavorites?()
+            }
+            // Создаем UIAlertController для вывода уведомления
+            let alertController = UIAlertController(title: "Added to Favorites", message: "This article has been added to your favorites.", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            present(alertController, animated: true, completion: nil)
         }
     }
 }

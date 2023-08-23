@@ -9,8 +9,15 @@ import UIKit
 import SnapKit
 import CoreData
 
+protocol FavoritesViewControllerDelegate: class {
+    func didAddArticleToFavorites()
+}
+
 final class FavoritesViewController: UIViewController {
+    
     private var favoriteArticles: [FavoriteArticle] = []
+    weak var delegate: FavoritesViewControllerDelegate?
+
     var webViewController: WebViewController?
 
     //MARK: Properties
@@ -37,12 +44,9 @@ final class FavoritesViewController: UIViewController {
     }
     // load Favorites
     func loadFavoriteArticles() {
-        DispatchQueue.main.async { [self] in
-            favoriteArticles = CoreDataManager.shared.fetchFavoriteArticles()
-            tableView.reloadData()
-        }
+        favoriteArticles = CoreDataManager.shared.fetchFavoriteArticles()
+        tableView.reloadData()
     }
-
 } // end
 //MARK: extension TableView
 extension FavoritesViewController: UITableViewDelegate, UITableViewDataSource{
@@ -78,8 +82,16 @@ extension FavoritesViewController: UITableViewDelegate, UITableViewDataSource{
         if let cell = tableView.cellForRow(at: indexPath) as? CustomTableViewCell,
            let newsArticle = cell.newsArticle {
             let webViewController = WebViewController()
+
             webViewController.newsArticle = newsArticle // Передали экземпляр NewsArticle
+
             navigationController?.pushViewController(webViewController, animated: true)
         }
     }
 }
+
+//extension FavoritesViewController: FavoritesViewControllerDelegate {
+//    func didAddArticleToFavorites() {
+//        loadFavoriteArticles()
+//    }
+//}
