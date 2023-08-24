@@ -16,7 +16,14 @@ class WebViewController: UIViewController {
     var newsArticle: NewsArticle?
     var didAddArticleToFavorites: (() -> Void)?
 
-    private var isStarred = false
+    private var isStarred: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: "isStarred")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "isStarred")
+        }
+    }
     private lazy var webView: WKWebView = {
         let webView = WKWebView()
         return webView
@@ -27,6 +34,8 @@ class WebViewController: UIViewController {
         setupWebViewConstraints()
         loadArticleURL()
         starButton()
+        updateStarButtonAppearance() // Обновляем начальный вид кнопки
+
     }
     //MARK: Methods
     private func setupWebViewConstraints() {
@@ -47,6 +56,8 @@ class WebViewController: UIViewController {
         let starButton = UIBarButtonItem(image: UIImage(systemName: isStarred ? "star.fill" : "star"), style: .plain, target: self, action: #selector(starButtonAction))
         navigationItem.rightBarButtonItems = [starButton]
     }
+    
+    /*
     // starButtonAction
     @objc private func starButtonAction() {
         isStarred.toggle()
@@ -77,4 +88,87 @@ class WebViewController: UIViewController {
             present(alertController, animated: true, completion: nil)
         }
     }
+     */
+    @objc private func starButtonAction() {
+        // Изменяем состояние кнопки (нажата/не нажата)
+        isStarred.toggle()
+        
+        // Обновляем внешний вид кнопки на основе нового состояния
+        updateStarButtonAppearance()
+        
+        if isStarred {
+            // Если кнопка нажата, добавляем статью в избранное
+            addToFavorites()
+        } else {
+            // Если кнопка не нажата, удаляем статью из избранного
+            removeFromFavorites()
+        }
+        
+        updateStarButtonAppearance()
+    }
+    
+    private func updateStarButtonAppearance() {
+        if isStarred {
+            // Установите изображение для кнопки, когда она нажата
+            navigationItem.rightBarButtonItem?.image = UIImage(systemName: "star.fill")
+        } else {
+            // Установите изображение для кнопки, когда она не нажата
+            navigationItem.rightBarButtonItem?.image = UIImage(systemName: "star")
+        }
+    }
+
+    private func addToFavorites() {
+        // Получаем контекст CoreData
+        let context = CoreDataManager.shared.persistentContainer.viewContext
+        // Проверяем, существует ли статья в избранном по её URL
+        if findExistingFavorite() == nil {
+            // Если статья не существует в избранном, создаем новый объект FavoriteArticle
+            let favoriteArticle = FavoriteArticle(context: context)
+            favoriteArticle.title = newsArticle?.title
+            favoriteArticle.abstract = newsArticle?.abstract
+            favoriteArticle.url = newsArticle?.url
+            favoriteArticle.publishedDate = newsArticle?.publishedDate
+
+            CoreDataManager.shared.saveContext()
+            print("Article added to favorites")
+            
+            DispatchQueue.main.async {
+                // Вызываем блок обратного вызова, если он установлен
+                self.didAddArticleToFavorites?()
+            }
+            // Создаем UIAlertController для вывода уведомления
+            let alertController = UIAlertController(title: "Added to Favorites", message: "This article has been added to your favorites.", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            present(alertController, animated: true, completion: nil)
+        }
+    }
+
+    private func removeFromFavorites() {
+        // Получаем контекст CoreData
+        let context = CoreDataManager.shared.persistentContainer.viewContext
+        // Ищем существующую избранную статью по URL
+        if let existingFavorite = findExistingFavorite() {
+            // Удаляем статью из избранного
+            context.delete(existingFavorite)
+            CoreDataManager.shared.saveContext()
+            print("Article removed from favorites")
+        }
+    }
+
+    private func findExistingFavorite() -> FavoriteArticle? {
+        // Проверяем, существует ли статья в избранном по её URL
+        let context = CoreDataManager.shared.persistentContainer.viewContext
+        let fetchRequest: NSFetchRequest<FavoriteArticle> = FavoriteArticle.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "url == %@", newsArticle?.url ?? "")
+        
+        do {
+            let favorites = try context.fetch(fetchRequest)
+            return favorites.first
+        } catch {
+            print("Error fetching favorites: \(error)")
+            return nil
+        }
+    }
+
 }

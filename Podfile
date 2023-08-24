@@ -9,6 +9,7 @@ target 'NewsM' do
   pod 'SnapKit'
   pod 'SDWebImage'
 
+
   target 'NewsMTests' do
     inherit! :search_paths
     # Pods for testing
