@@ -9,10 +9,6 @@ import Foundation
 import UIKit
 import SnapKit
 
-import Foundation
-import UIKit
-import SnapKit
-
 final class SharedViewController: UIViewController {
     private var articles: [NewsArticle] = []
     private let refreshControl = UIRefreshControl()

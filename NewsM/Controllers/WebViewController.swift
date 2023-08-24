@@ -29,7 +29,6 @@ class WebViewController: UIViewController {
         starButton()
     }
     //MARK: Methods
-    // Setup WebView Constraints
     private func setupWebViewConstraints() {
         view.addSubview(webView)
         webView.snp.makeConstraints { make in

@@ -8,12 +8,11 @@
 import Foundation
 import UIKit
 
-class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
+class MainTabBarController: UITabBarController {
     //MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         generateTabBar()
-        setupDelegate()
     }
     //MARK: Create TabBar
     private func generateTabBar() {
@@ -41,18 +40,5 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         viewController.tabBarItem.title = title
         viewController.tabBarItem.image = image
         return viewController
-    }
-    // Delegate
-    private func setupDelegate() {
-        delegate = self
-    }
-    //MARK: Animation TabBar
-    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-        if let fromView = selectedViewController?.view, let toView = viewController.view {
-            if fromView != toView {
-                UIView.transition(from: fromView, to: toView, duration: 0.3, options: [.transitionCrossDissolve], completion: nil)
-            }
-        }
-        return true
     }
 }

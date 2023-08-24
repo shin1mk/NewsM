@@ -14,12 +14,7 @@ protocol FavoritesViewControllerDelegate: AnyObject {
 }
 
 final class FavoritesViewController: UIViewController {
-    
     private var favoriteArticles: [FavoriteArticle] = []
-    weak var delegate: FavoritesViewControllerDelegate?
-
-    var webViewController: WebViewController?
-
     //MARK: Properties
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -35,7 +30,7 @@ final class FavoritesViewController: UIViewController {
         setupTableView()
         loadFavoriteArticles()
     }
-    
+    //MARK: Lifecycle
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         loadFavoriteArticles()
@@ -61,14 +56,13 @@ extension FavoritesViewController: UITableViewDelegate, UITableViewDataSource{
     }
     //MARK: numberOfRowsInSection
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-           return favoriteArticles.count
-       }
-
+        return favoriteArticles.count
+    }
+    //MARK: cellForRowAt
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomTableViewCell
-        
         let favoriteArticle = favoriteArticles[indexPath.row]
-
+        
         cell.newsArticle = NewsArticle(
             title: favoriteArticle.title ?? "",
             abstract: favoriteArticle.abstract ?? "",
@@ -79,7 +73,6 @@ extension FavoritesViewController: UITableViewDelegate, UITableViewDataSource{
         
         return cell
     }
-
     //MARK: didSelectRowAt:
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
@@ -87,16 +80,8 @@ extension FavoritesViewController: UITableViewDelegate, UITableViewDataSource{
         if let cell = tableView.cellForRow(at: indexPath) as? CustomTableViewCell,
            let newsArticle = cell.newsArticle {
             let webViewController = WebViewController()
-
             webViewController.newsArticle = newsArticle // Передали экземпляр NewsArticle
-
             navigationController?.pushViewController(webViewController, animated: true)
         }
     }
 }
-
-//extension FavoritesViewController: FavoritesViewControllerDelegate {
-//    func didAddArticleToFavorites() {
-//        loadFavoriteArticles()
-//    }
-//}
