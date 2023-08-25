@@ -13,15 +13,13 @@ import CoreData
 class WebViewController: UIViewController {
     //MARK: Properties
 
-    var newsArticle: NewsArticle?
     var didAddArticleToFavorites: (() -> Void)?
-
-    private var isStarred: Bool {
-        get {
-            return UserDefaults.standard.bool(forKey: "isStarred")
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "isStarred")
+    private var isStarred: Bool = false 
+    var newsArticle: NewsArticle? {
+        didSet {
+            if let newsArticle = newsArticle {
+                isStarred = newsArticle.isFavorite
+            }
         }
     }
     private lazy var webView: WKWebView = {
@@ -46,11 +44,18 @@ class WebViewController: UIViewController {
     }
     // Load Article URL
     private func loadArticleURL() {
+        // Когда открываете статью в веб-вью, установите isFavorite
         if let urlStr = newsArticle?.url, let url = URL(string: urlStr) {
             let request = URLRequest(url: url)
             webView.load(request)
+            
+            // Проверяем, является ли статья избранной
+            if let existingFavorite = findExistingFavorite(urlStr) {
+                newsArticle?.isFavorite = true
+            }
         }
     }
+
     //MARK: Star Button
     private func starButton() {
         let starButton = UIBarButtonItem(image: UIImage(systemName: isStarred ? "star.fill" : "star"), style: .plain, target: self, action: #selector(starButtonAction))
@@ -93,6 +98,10 @@ class WebViewController: UIViewController {
         // Изменяем состояние кнопки (нажата/не нажата)
         isStarred.toggle()
         
+        if var article = newsArticle {
+            article.isFavorite = isStarred
+            newsArticle = article // Обновляем новости с новым состоянием
+        }
         // Обновляем внешний вид кнопки на основе нового состояния
         updateStarButtonAppearance()
         
@@ -121,7 +130,7 @@ class WebViewController: UIViewController {
         // Получаем контекст CoreData
         let context = CoreDataManager.shared.persistentContainer.viewContext
         // Проверяем, существует ли статья в избранном по её URL
-        if findExistingFavorite() == nil {
+        if findExistingFavorite(newsArticle?.url ?? "") == nil {
             // Если статья не существует в избранном, создаем новый объект FavoriteArticle
             let favoriteArticle = FavoriteArticle(context: context)
             favoriteArticle.title = newsArticle?.title
@@ -148,7 +157,7 @@ class WebViewController: UIViewController {
         // Получаем контекст CoreData
         let context = CoreDataManager.shared.persistentContainer.viewContext
         // Ищем существующую избранную статью по URL
-        if let existingFavorite = findExistingFavorite() {
+        if let existingFavorite = findExistingFavorite(newsArticle?.url ?? "") {
             // Удаляем статью из избранного
             context.delete(existingFavorite)
             CoreDataManager.shared.saveContext()
@@ -156,11 +165,12 @@ class WebViewController: UIViewController {
         }
     }
 
-    private func findExistingFavorite() -> FavoriteArticle? {
+
+    private func findExistingFavorite(_ url: String) -> FavoriteArticle? {
         // Проверяем, существует ли статья в избранном по её URL
         let context = CoreDataManager.shared.persistentContainer.viewContext
         let fetchRequest: NSFetchRequest<FavoriteArticle> = FavoriteArticle.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "url == %@", newsArticle?.url ?? "")
+        fetchRequest.predicate = NSPredicate(format: "url == %@", url)
         
         do {
             let favorites = try context.fetch(fetchRequest)
@@ -170,5 +180,6 @@ class WebViewController: UIViewController {
             return nil
         }
     }
+
 
 }

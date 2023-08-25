@@ -54,7 +54,7 @@ final class NewsManager {
                                                           abstract: abstract,
                                                           url: url,
                                                           publishedDate: publishedDate,
-                                                          mediaMetadata: mediaMetadata)
+                                                          mediaMetadata: mediaMetadata, isFavorite: false)
                                 parsedArticles.append(article)
                             }
                         }

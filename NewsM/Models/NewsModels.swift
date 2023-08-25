@@ -13,6 +13,8 @@ struct NewsArticle {
     let url: String
     let publishedDate: String
     var mediaMetadata: [MediaMetadata]
+    var isFavorite: Bool // Добавьте это свойство
+
 }
 
 struct MediaMetadata {
