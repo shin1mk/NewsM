@@ -15,8 +15,7 @@ protocol FavoritesViewControllerDelegate: AnyObject {
 
 final class FavoritesViewController: UIViewController {
     private var favoriteArticles: [FavoriteArticle] = []
-    private var newsArticles: [NewsArticle] = [] // Добавьте этот массив
-
+    private var newsArticles: [NewsArticle] = []
     //MARK: Properties
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -47,14 +46,12 @@ final class FavoritesViewController: UIViewController {
     // load Favorites
     private func loadFavoriteArticles() {
         favoriteArticles = CoreDataManager.shared.fetchFavoriteArticles()
-        
-        // Обновите состояние isFavorite для каждой статьи в соответствии с данными из базы данных
+        // Обновляем состояние isFavorite для каждой статьи в соответствии с данными
         favoriteArticles.forEach { favoriteArticle in
             if let index = newsArticles.firstIndex(where: { $0.url == favoriteArticle.url }) {
                 newsArticles[index].isFavorite = true
             }
         }
-        
         tableView.reloadData()
     }
 } // end
@@ -81,7 +78,6 @@ extension FavoritesViewController: UITableViewDelegate, UITableViewDataSource{
             mediaMetadata: [],
             isFavorite: false
         )
-        
         return cell
     }
     //MARK: didSelectRowAt:

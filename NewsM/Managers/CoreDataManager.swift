@@ -12,7 +12,7 @@ class CoreDataManager {
     static let shared = CoreDataManager()
     // MARK: - Core Data stack
     lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "NewsM") // Замените "NewsM" на имя вашей CoreData модели
+        let container = NSPersistentContainer(name: "NewsM") // my CoreData model
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
