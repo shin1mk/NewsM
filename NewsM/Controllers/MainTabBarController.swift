@@ -9,13 +9,30 @@ import Foundation
 import UIKit
 
 class MainTabBarController: UITabBarController {
+
     //MARK: LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         generateTabBar()
+        updateFavoritesBadge()
     }
+    override func viewWillAppear(_ animated: Bool) {
+         super.viewWillAppear(animated)
+         updateFavoritesBadge()
+     }
     //MARK: Create TabBar
     private func generateTabBar() {
+        let favoritesViewController = FavoritesViewController()
+         
+         // Получаем количество статей в избранном
+         if let badgeCount = getFavoriteArticlesCount() {
+             favoritesViewController.tabBarItem.badgeValue = String(badgeCount)
+             print("Badge count set to: \(badgeCount)")
+         } else {
+             favoritesViewController.tabBarItem.badgeValue = nil // Если нет статей, уберите бейдж
+             print("No favorite articles, badge cleared.")
+         }
+        
         viewControllers = [
             generateVC(
                 viewController: EmailedViewController(),
@@ -40,5 +57,21 @@ class MainTabBarController: UITabBarController {
         viewController.tabBarItem.title = title
         viewController.tabBarItem.image = image
         return viewController
+    }
+    
+    func getFavoriteArticlesCount() -> Int? {
+        // Здесь вы можете использовать свою логику для подсчета статей в избранном
+        let favoriteArticles = CoreDataManager.shared.fetchFavoriteArticles()
+        return favoriteArticles.count
+    }
+    
+    func updateFavoritesBadge() {
+        if let favoriteCount = getFavoriteArticlesCount() {
+            if favoriteCount > 0 {
+                tabBar.items?.last?.badgeValue = String(favoriteCount)
+            } else {
+                tabBar.items?.last?.badgeValue = nil
+            }
+        }
     }
 }
