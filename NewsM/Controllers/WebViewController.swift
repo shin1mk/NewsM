@@ -78,7 +78,8 @@ class WebViewController: UIViewController {
             favoriteArticle.publishedDate = newsArticle?.publishedDate
 
             CoreDataManager.shared.saveContext()
-            
+            print("Article added to favorites")
+
             DispatchQueue.main.async {
                 self.didAddArticleToFavorites?()
             }
@@ -90,7 +91,7 @@ class WebViewController: UIViewController {
         if let existingFavorite = findExistingFavorite(newsArticle?.url ?? "") {
             context.delete(existingFavorite)
             CoreDataManager.shared.saveContext()
-            print("Article removed from favorites")
+            print("Article added to favorites")
         }
     }
 }
