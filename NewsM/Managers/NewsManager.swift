@@ -11,7 +11,7 @@ import Foundation
 final class NewsManager {
     static let shared = NewsManager()
     private let apiKey = "FmT19AaabNgeLfhi0HD0pHW9NWwXcNKl"
-    
+    //MARK: Fetch articles
     private func fetchArticles(from endpoint: String, completion: @escaping ([NewsArticle]?, Error?) -> Void) {
         guard let url = URL(string: "https://api.nytimes.com/svc/mostpopular/v2/\(endpoint)/30.json?api-key=\(apiKey)") else {
             completion(nil, NSError(domain: "Invalid URL", code: 0, userInfo: nil))
@@ -68,15 +68,15 @@ final class NewsManager {
         }
         task.resume()
     }
-    
+    // most emailed
     func fetchEmailedArticles(completion: @escaping ([NewsArticle]?, Error?) -> Void) {
         fetchArticles(from: "emailed", completion: completion)
     }
-    
+    // most shared
     func fetchSharedArticles(completion: @escaping ([NewsArticle]?, Error?) -> Void) {
         fetchArticles(from: "shared", completion: completion)
     }
-    
+    // most viewed
     func fetchViewedArticles(completion: @escaping ([NewsArticle]?, Error?) -> Void) {
         fetchArticles(from: "viewed", completion: completion)
     }

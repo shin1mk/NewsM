@@ -19,8 +19,6 @@ final class FavoritesViewController: UIViewController {
     //MARK: Properties
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
-        tableView.delegate = self
-        tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: "CustomCell")
         return tableView
@@ -30,8 +28,9 @@ final class FavoritesViewController: UIViewController {
         super.viewDidLoad()
         setupTableView()
         loadFavoriteArticles()
+        configureTableView()
     }
-    //MARK: Lifecycle
+    // viewWillAppear
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         loadFavoriteArticles()
@@ -43,6 +42,11 @@ final class FavoritesViewController: UIViewController {
             make.edges.equalToSuperview()
         }
     }
+    // Delegate/DataSource
+    private func configureTableView() {
+        tableView.delegate = self
+        tableView.dataSource = self
+    }
     // load Favorites
     private func loadFavoriteArticles() {
         favoriteArticles = CoreDataManager.shared.fetchFavoriteArticles()
@@ -52,9 +56,9 @@ final class FavoritesViewController: UIViewController {
                 newsArticles[index].isFavorite = true
             }
         }
-        tableView.reloadData()
+        tableView.reloadData() // перезагружаем таблицу
     }
-} // end
+}
 //MARK: extension TableView
 extension FavoritesViewController: UITableViewDelegate, UITableViewDataSource{
     //MARK: heightForRowAt
@@ -69,7 +73,7 @@ extension FavoritesViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomTableViewCell
         let favoriteArticle = favoriteArticles[indexPath.row]
-        
+        // отображаем данные и isFavorite иконку
         cell.newsArticle = NewsArticle(
             title: favoriteArticle.title ?? "",
             abstract: favoriteArticle.abstract ?? "",

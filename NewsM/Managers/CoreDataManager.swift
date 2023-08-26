@@ -28,7 +28,7 @@ class CoreDataManager {
                 try context.save()
             } catch {
                 let nserror = error as NSError
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+                fatalError("error \(nserror), \(nserror.userInfo)")
             }
         }
     }
@@ -45,7 +45,7 @@ class CoreDataManager {
             return []
         }
     }
-    // сохранение избранной статьи
+    // save favorite article
     func saveFavoriteArticle(newsArticle: NewsArticle) {
         let context = persistentContainer.viewContext
         let favoriteArticle = FavoriteArticle(context: context)
@@ -53,7 +53,7 @@ class CoreDataManager {
         favoriteArticle.abstract = newsArticle.abstract
         favoriteArticle.url = newsArticle.url
         favoriteArticle.publishedDate = newsArticle.publishedDate
-
+        
         saveContext()
     }
 }

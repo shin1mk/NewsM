@@ -15,8 +15,6 @@ final class SharedViewController: UIViewController {
     //MARK: Properties
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
-        tableView.delegate = self
-        tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: "CustomCell")
         tableView.refreshControl = refreshControl
@@ -28,6 +26,7 @@ final class SharedViewController: UIViewController {
         setupTableViewConstraints()
         fetchSharedArticles()
         setupTarget()
+        configureTableView()
     }
     //MARK: Methods
     private func setupTableViewConstraints() {
@@ -36,7 +35,7 @@ final class SharedViewController: UIViewController {
             make.edges.equalToSuperview()
         }
     }
-    //MARK: API
+    // API call
     private func fetchSharedArticles() {
         NewsManager.shared.fetchSharedArticles { [weak self] articles, error in
             guard let self = self else { return }
@@ -54,6 +53,11 @@ final class SharedViewController: UIViewController {
     // Target
     private func setupTarget() {
         refreshControl.addTarget(self, action: #selector(refreshData(_:)), for: .valueChanged)
+    }
+    // Delegate/DataSource
+    private func configureTableView() {
+        tableView.delegate = self
+        tableView.dataSource = self
     }
     // Refresh Data
     @objc private func refreshData(_ sender: Any) {

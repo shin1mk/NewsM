@@ -66,14 +66,17 @@ final class CustomTableViewCell: UITableViewCell {
             make.bottom.equalToSuperview().inset(8)
         }
     }
-    //MARK: Configure
+    // Configure
     private func configure(with newsArticle: NewsArticle?) {
         titleLabel.text = newsArticle?.title
         titleLabel.numberOfLines = 2
         dateLabel.text = newsArticle?.publishedDate
-        
-        if let thumbnailURL = newsArticle?.mediaMetadata.first?.url,
-           let url = URL(string: thumbnailURL) {
+        // set image
+        setImageFromThumbnailURL(newsArticle?.mediaMetadata.first?.url)
+    }
+    // setImageFromThumbnailURL
+    private func setImageFromThumbnailURL(_ thumbnailURL: String?) {
+        if let thumbnailURL = thumbnailURL, let url = URL(string: thumbnailURL) {
             customImageView.sd_setImage(with: url, completed: nil)
         }
     }

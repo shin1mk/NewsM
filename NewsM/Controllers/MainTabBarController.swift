@@ -8,30 +8,21 @@
 import Foundation
 import UIKit
 
-class MainTabBarController: UITabBarController {
-
-    //MARK: LifeCycle
+final class MainTabBarController: UITabBarController {
+    //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         generateTabBar()
         updateFavoritesBadge()
     }
+    
     override func viewWillAppear(_ animated: Bool) {
          super.viewWillAppear(animated)
          updateFavoritesBadge()
      }
     //MARK: Create TabBar
     private func generateTabBar() {
-        let favoritesViewController = FavoritesViewController()
-         
-         // Получаем количество статей в избранном
-         if let badgeCount = getFavoriteArticlesCount() {
-             favoritesViewController.tabBarItem.badgeValue = String(badgeCount)
-             print("Badge count set to: \(badgeCount)")
-         } else {
-             favoritesViewController.tabBarItem.badgeValue = nil // Если нет статей, уберите бейдж
-             print("No favorite articles, badge cleared.")
-         }
+        _ = configureFavoritesViewControllerBadge() // FavoritesViewControllerBadge
         
         viewControllers = [
             generateVC(
@@ -52,20 +43,35 @@ class MainTabBarController: UITabBarController {
                 image: UIImage(systemName: "heart.fill"))
         ]
     }
-    // Generate View Controller
+    // Generate View Controllers
     private func generateVC(viewController: UIViewController, title: String, image: UIImage?) -> UIViewController {
         viewController.tabBarItem.title = title
         viewController.tabBarItem.image = image
         return viewController
     }
-    
-    func getFavoriteArticlesCount() -> Int? {
-        // Здесь вы можете использовать свою логику для подсчета статей в избранном
+}
+//MARK: - Create Badge
+extension MainTabBarController {
+    // Favorites View Controller Badge
+    private func configureFavoritesViewControllerBadge() -> UIViewController {
+        let favoritesViewController = FavoritesViewController()
+        // Получаем количество статей в избранном
+        if let badgeCount = getFavoriteArticlesCount() {
+            favoritesViewController.tabBarItem.badgeValue = String(badgeCount)
+            print("Badge count \(badgeCount)")
+        } else {
+            favoritesViewController.tabBarItem.badgeValue = nil // Если нет статей удаляем badge
+            print("No favorite articles")
+        }
+        return favoritesViewController
+    }
+    // get Favorite Articles Count
+    private func getFavoriteArticlesCount() -> Int? {
         let favoriteArticles = CoreDataManager.shared.fetchFavoriteArticles()
         return favoriteArticles.count
     }
-    
-    func updateFavoritesBadge() {
+    // update Favorites Badge
+    private func updateFavoritesBadge() {
         if let favoriteCount = getFavoriteArticlesCount() {
             if favoriteCount > 0 {
                 tabBar.items?.last?.badgeValue = String(favoriteCount)
