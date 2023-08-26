@@ -70,21 +70,24 @@ class WebViewController: UIViewController {
     // Add To Favorites
     private func addToFavorites() {
         let context = CoreDataManager.shared.persistentContainer.viewContext
-        if findExistingFavorite(newsArticle?.url ?? "") == nil {
+        let url = newsArticle?.url ?? ""
+        
+        if findExistingFavorite(url) == nil {
             let favoriteArticle = FavoriteArticle(context: context)
             favoriteArticle.title = newsArticle?.title
             favoriteArticle.abstract = newsArticle?.abstract
-            favoriteArticle.url = newsArticle?.url
+            favoriteArticle.url = url
             favoriteArticle.publishedDate = newsArticle?.publishedDate
-
+            favoriteArticle.imageURL = newsArticle?.mediaMetadata.first?.url
+            
             CoreDataManager.shared.saveContext()
             print("Article added to favorites")
-
             DispatchQueue.main.async {
                 self.didAddArticleToFavorites?()
             }
         }
     }
+
     // Remove From Favorites
     private func removeFromFavorites() {
         let context = CoreDataManager.shared.persistentContainer.viewContext
@@ -123,6 +126,7 @@ extension WebViewController {
         
         if isStarred {
             addToFavorites()
+
         } else {
             removeFromFavorites()
         }

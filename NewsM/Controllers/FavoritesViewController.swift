@@ -73,17 +73,43 @@ extension FavoritesViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomTableViewCell
         let favoriteArticle = favoriteArticles[indexPath.row]
-        // отображаем данные и isFavorite иконку
-        cell.newsArticle = NewsArticle(
+        
+        // Создайте новый экземпляр NewsArticle и установите значения
+        var newsArticle = NewsArticle(
             title: favoriteArticle.title ?? "",
             abstract: favoriteArticle.abstract ?? "",
             url: favoriteArticle.url ?? "",
             publishedDate: favoriteArticle.publishedDate ?? "",
             mediaMetadata: [],
-            isFavorite: false
+            isFavorite: true
         )
+        
+        // Установите imageURL в newsArticle
+        if let imageURLString = favoriteArticle.imageURL {
+            newsArticle.mediaMetadata = [MediaMetadata(url: imageURLString, format: "", height: 0, width: 0)]
+        }
+        
+        // Установите newsArticle как значение для cell.newsArticle
+        cell.newsArticle = newsArticle
+        
+        // Здесь вы можете загрузить изображение из favoriteArticle.imageURL
+        // и установить его в ячейку cell.customImageView
+        if let imageURLString = favoriteArticle.imageURL,
+           let imageURL = URL(string: imageURLString) {
+            cell.customImageView.sd_setImage(with: imageURL) { (image, error, cacheType, imageURL) in
+                if let error = error {
+                    print("Ошибка загрузки изображения: \(error.localizedDescription)")
+                }
+            }
+        } else {
+            // Если нет URL изображения, вы можете установить пустое изображение или заглушку
+            cell.customImageView.image = UIImage(named: "placeholder_image")
+        }
+        
         return cell
     }
+
+
     //MARK: didSelectRowAt:
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

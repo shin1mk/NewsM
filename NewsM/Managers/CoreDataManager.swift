@@ -47,6 +47,11 @@ class CoreDataManager {
     }
     // save favorite article
     func saveFavoriteArticle(newsArticle: NewsArticle) {
+        guard newsArticle.isFavorite else {
+            // Не сохраняем статью, если она не является избранной
+            return
+        }
+        
         let context = persistentContainer.viewContext
         let favoriteArticle = FavoriteArticle(context: context)
         favoriteArticle.title = newsArticle.title
@@ -54,6 +59,16 @@ class CoreDataManager {
         favoriteArticle.url = newsArticle.url
         favoriteArticle.publishedDate = newsArticle.publishedDate
         
+        // Добавьте сохранение URL изображения из медиа-метаданных
+        if let imageURL = newsArticle.mediaMetadata.first?.url {
+            favoriteArticle.imageURL = imageURL
+            print("Image URL saved: \(imageURL)")
+        } else {
+            print("No image URL found.")
+        }
+        
         saveContext()
     }
+
+    
 }
