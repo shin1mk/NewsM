@@ -23,17 +23,25 @@ final class FavoritesViewController: UIViewController {
         tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: "CustomCell")
         return tableView
     }()
+    private lazy var noFavoritesLabel: UILabel = {
+        let label = UILabel()
+        label.text = "There are no favorite articles"
+        label.textAlignment = .center
+        return label
+    }()
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
         loadFavoriteArticlesFromCoreData()
         configureTableView()
+        setupNoFavoritesLabel()
     }
     // viewWillAppear
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         loadFavoriteArticlesFromCoreData()
+        setupNoFavoritesLabel()
     }
     //MARK: Methods
     private func setupTableView() {
@@ -41,6 +49,14 @@ final class FavoritesViewController: UIViewController {
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        view.addSubview(noFavoritesLabel)
+        noFavoritesLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+    }
+    // NoFavoritesLabel
+    private func setupNoFavoritesLabel() {
+        noFavoritesLabel.isHidden = !favoriteArticles.isEmpty
     }
     // Delegate/DataSource
     private func configureTableView() {

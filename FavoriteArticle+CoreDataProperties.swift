@@ -25,5 +25,4 @@ extension FavoriteArticle {
     @NSManaged public var title: String?
     @NSManaged public var imageURL: String?
     @NSManaged public var isFavorite: Bool
-    
 }
