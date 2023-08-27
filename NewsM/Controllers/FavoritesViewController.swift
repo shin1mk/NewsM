@@ -27,13 +27,13 @@ final class FavoritesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
-        loadFavoriteArticles()
+        loadFavoriteArticlesFromCoreData()
         configureTableView()
     }
     // viewWillAppear
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        loadFavoriteArticles()
+        loadFavoriteArticlesFromCoreData()
     }
     //MARK: Methods
     private func setupTableView() {
@@ -48,7 +48,7 @@ final class FavoritesViewController: UIViewController {
         tableView.dataSource = self
     }
     // load Favorites
-    private func loadFavoriteArticles() {
+    private func loadFavoriteArticlesFromCoreData() {
         favoriteArticles = CoreDataManager.shared.fetchFavoriteArticles()
         // Обновляем состояние isFavorite для каждой статьи в соответствии с данными
         favoriteArticles.forEach { favoriteArticle in
@@ -73,8 +73,6 @@ extension FavoritesViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomTableViewCell
         let favoriteArticle = favoriteArticles[indexPath.row]
-        
-        // Создайте новый экземпляр NewsArticle и установите значения
         var newsArticle = NewsArticle(
             title: favoriteArticle.title ?? "",
             abstract: favoriteArticle.abstract ?? "",
@@ -83,33 +81,13 @@ extension FavoritesViewController: UITableViewDelegate, UITableViewDataSource{
             mediaMetadata: [],
             isFavorite: true
         )
-        
         // Установите imageURL в newsArticle
         if let imageURLString = favoriteArticle.imageURL {
             newsArticle.mediaMetadata = [MediaMetadata(url: imageURLString, format: "", height: 0, width: 0)]
         }
-        
-        // Установите newsArticle как значение для cell.newsArticle
         cell.newsArticle = newsArticle
-        
-        // Здесь вы можете загрузить изображение из favoriteArticle.imageURL
-        // и установить его в ячейку cell.customImageView
-        if let imageURLString = favoriteArticle.imageURL,
-           let imageURL = URL(string: imageURLString) {
-            cell.customImageView.sd_setImage(with: imageURL) { (image, error, cacheType, imageURL) in
-                if let error = error {
-                    print("Ошибка загрузки изображения: \(error.localizedDescription)")
-                }
-            }
-        } else {
-            // Если нет URL изображения, вы можете установить пустое изображение или заглушку
-            cell.customImageView.image = UIImage(named: "placeholder_image")
-        }
-        
         return cell
     }
-
-
     //MARK: didSelectRowAt:
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

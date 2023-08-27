@@ -30,7 +30,7 @@ class WebViewController: UIViewController {
         super.viewDidLoad()
         setupWebViewConstraints()
         loadArticleURL()
-        setupStarButton()
+        setupStarShareButton()
         updateStarButtonAppearance()
     }
     // MARK: Methods
@@ -45,7 +45,6 @@ class WebViewController: UIViewController {
         guard let urlStr = newsArticle?.url, let url = URL(string: urlStr) else {
             return
         }
-        
         let request = URLRequest(url: url)
         webView.load(request)
         
@@ -87,7 +86,6 @@ class WebViewController: UIViewController {
             }
         }
     }
-
     // Remove From Favorites
     private func removeFromFavorites() {
         let context = CoreDataManager.shared.persistentContainer.viewContext
@@ -101,18 +99,21 @@ class WebViewController: UIViewController {
 //MARK: - Star Button
 extension WebViewController {
     // setup Star Button
-    private func setupStarButton() {
+    private func setupStarShareButton() {
+        // Favorite
         let starButton = UIBarButtonItem(image: UIImage(systemName: isStarred ? "star.fill" : "star"), style: .plain, target: self, action: #selector(starButtonAction))
-        navigationItem.rightBarButtonItems = [starButton]
+        // Share
+        let shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareTapped))
+        navigationItem.rightBarButtonItems = [starButton, shareButton]
     }
     // Star Button Appearance
     private func updateStarButtonAppearance() {
-        if isStarred {
-            navigationItem.rightBarButtonItem?.image = UIImage(systemName: "star.fill")
-        } else {
-            navigationItem.rightBarButtonItem?.image = UIImage(systemName: "star")
-        }
-    }
+           if isStarred {
+               navigationItem.rightBarButtonItem?.image = UIImage(systemName: "star.fill")
+           } else {
+               navigationItem.rightBarButtonItem?.image = UIImage(systemName: "star")
+           }
+       }
     // Star Button Action
     @objc private func starButtonAction() {
         isStarred.toggle()
@@ -129,6 +130,14 @@ extension WebViewController {
 
         } else {
             removeFromFavorites()
+        }
+    }
+    // Share Button Action
+    @objc func shareTapped() {
+        // Получаем текущий URL и можем его копировать
+        if let currentURL = webView.url {
+            let activityViewController = UIActivityViewController(activityItems: [currentURL], applicationActivities: nil)
+            present(activityViewController, animated: true, completion: nil)
         }
     }
 }

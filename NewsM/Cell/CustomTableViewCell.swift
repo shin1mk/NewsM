@@ -27,7 +27,7 @@ final class CustomTableViewCell: UITableViewCell {
         dateLabel.font = UIFont.systemFont(ofSize: 12)
         return dateLabel
     }()
-     let customImageView: UIImageView = {
+    private let customImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -76,14 +76,14 @@ final class CustomTableViewCell: UITableViewCell {
     }
     // setImageFromThumbnailURL
     private func setImageFromThumbnailURL(_ thumbnailURL: String?) {
-        if let thumbnailURL = thumbnailURL, let url = URL(string: thumbnailURL) {
-            customImageView.sd_setImage(with: url) { _, _, _, _ in
-                if let image = self.customImageView.image {
-                    print("Image loaded successfully.")
-                } else {
-                    print("Image loading failed.")
-                }
+        guard let thumbnailURL = thumbnailURL, let url = URL(string: thumbnailURL) else {
+            return
+        }
+        customImageView.sd_setImage(with: url) { [weak self] (image, error, cacheType, imageURL) in
+            guard let self = self, error == nil, let image = image else {
+                return
             }
+            self.customImageView.image = image
         }
     }
 }
